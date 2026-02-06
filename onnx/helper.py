@@ -1,6 +1,34 @@
 # Copyright (c) ONNX Project Contributors
 #
 # SPDX-License-Identifier: Apache-2.0
+"""
+Moduł helper - Narzędzia pomocnicze do tworzenia modeli ONNX
+
+Dla studentów: To jest twój główny "zestaw narzędzi" do budowania modeli ONNX
+od podstaw w Pythonie. Zawiera funkcje do tworzenia:
+- Węzłów (operatorów) - make_node()
+- Grafów - make_graph()
+- Modeli - make_model()
+- Tensorów - make_tensor()
+- Atrybutów - make_attribute()
+
+Przykład prostego modelu:
+    # Stwórz węzeł dodawania
+    node = helper.make_node('Add', inputs=['x', 'y'], outputs=['sum'])
+    
+    # Zdefiniuj wejścia i wyjścia
+    x = helper.make_tensor_value_info('x', TensorProto.FLOAT, [3, 2])
+    y = helper.make_tensor_value_info('y', TensorProto.FLOAT, [3, 2])
+    sum_out = helper.make_tensor_value_info('sum', TensorProto.FLOAT, [3, 2])
+    
+    # Utwórz graf
+    graph = helper.make_graph([node], 'add_graph', [x, y], [sum_out])
+    
+    # Utwórz model
+    model = helper.make_model(graph)
+    
+Zobacz dokumentację poszczególnych funkcji poniżej dla szczegółów.
+"""
 from __future__ import annotations
 
 import collections.abc
@@ -41,8 +69,16 @@ VersionRowType = tuple[str, int, int, int] | tuple[str, int, int, int, int]
 VersionTableType = list[VersionRowType]
 AssignmentBindingType = list[tuple[str, str]]
 
-# This is a copy of the documented version in https://github.com/onnx/onnx/blob/main/docs/Versioning.md#released-versions
-# Both must be updated whenever a new version of ONNX is released.
+# Tabela wersji ONNX - Historia rozwoju standardu
+# Dla studentów: Ta tabela pokazuje ewolucję ONNX. Każdy wiersz to wydanie zawierające:
+# - Numer wersji wydania (np. "1.15.0")
+# - Wersja IR (Intermediate Representation) - jak modele są reprezentowane wewnętrznie
+# - Wersja opset ai.onnx - zbiór dostępnych operatorów podstawowych
+# - Wersja opset ai.onnx.ml - operatory dla tradycyjnego ML (drzewa decyzyjne, itp.)
+# - Wersja opset ai.onnx.training - operatory do trenowania (opcjonalne)
+#
+# Źródło: https://github.com/onnx/onnx/blob/main/docs/Versioning.md#released-versions
+# Uwaga: Ta tabela musi być aktualizowana przy każdym nowym wydaniu ONNX!
 VERSION_TABLE: VersionTableType = [
     # Release-version, IR version, ai.onnx version, ai.onnx.ml version, (optional) ai.onnx.training version
     ("1.0", 3, 1, 1),
